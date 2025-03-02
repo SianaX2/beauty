@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beauty Lounge</title>
+
+    <link rel="stylesheet" href="src/style.css">
+</head>
+
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo">Beauty Lounge</div>
+                <ul class="nav-menu">
+                    <li><a href="#home" class="nav-link">Home</a></li>
+                    <li><a href="#services" class="nav-link">Services</a></li>
+                    <li><a href="#about" class="nav-link">About</a></li>
+                    <li><a href="#testimonials" class="nav-link">Testimonials</a></li>
+                    <li><a href="#contact" class="nav-link">Contact</a></li>
+                </ul>
+                <a href="#" id="loginBtn" class="cta-button">Login</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="video-background">
+            <video autoplay muted loop playsinline id="heroVideo">
+                <source src="/vid.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <div class="overlay"></div>
+        </div>
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h1 class="slide-in">Discover Your Natural Beauty</h1>
+                    <p class="slide-in">Experience luxury beauty treatments in a relaxing environment. Our skilled professionals will
+                        help you look and feel your best.</p>
+                    <a href="#services" class="cta-button slide-in">Explore Services</a>
+                </div>
+                <div class="hero-image">
+                    <!-- Removed image since we're using video background -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="services">
+        <div class="container">
+            <div class="section-title">
+                <h2>Our Services</h2>
+                <p>We offer a wide range of premium beauty treatments tailored to your unique needs</p>
+            </div>
+            <div class="services-grid">
+                <div class="service-card">
+                    <div class="service-image">
+                        <img src="facial.webp" alt="Facial Treatments">
+                    </div>
+                    <h3>Facial Treatments</h3>
+                    <p>Rejuvenate your skin with our custom facial treatments designed for your specific skin type.</p>
+                    <a href="facial" class="nav-link">Learn More</a>
+                </div>
+                <div class="service-card">
+                    <div class="service-image">
+                        <img src="nail.webp" alt="Nail Care">
+                    </div>
+                    <h3>Nail Care</h3>
+                    <p>Get perfectly manicured nails with our range of nail treatments and artistic designs.</p>
+                    <a href="nails" class="nav-link">Learn More</a>
+                </div>
+                <div class="service-card">
+                    <div class="service-image">
+                        <img src="hair.jpeg" alt="Hair Styling">
+                    </div>
+                    <h3>Hair Styling</h3>
+                    <p>Transform your look with our expert hair styling, coloring, and treatment services.</p>
+                    <a href="hair.html" class="nav-link">Learn More</a>
+                </div>
+                <div class="service-card">
+                    <div class="service-image">
+                        <img src="body.webp" alt="Body Treatments">
+                    </div>
+                    <h3>Body Treatments</h3>
+                    <p>Indulge in our relaxing body treatments including massages and skin rejuvenation.</p>
+                    <a href="body.html" class="nav-link">Learn More</a>
+                </div>
+                <div class="service-card">
+                    <div class="service-image">
+                        <img src="brows.webp" alt="Lash & Brow">
+                    </div>
+                    <h3>Lash & Brow</h3>
+                    <p>Enhance your natural beauty with our professional lash extensions and brow shaping.</p>
+                    <a href="lash.html" class="nav-link">Learn More</a>
+                </div>
+                <div class="service-card">
+                    <div class="service-image">
+                        <img src="makeuptrea.webp" alt="Makeup Services">
+                    </div>
+                    <h3>Makeup Services</h3>
+                    <p>Look your best for any occasion with our professional makeup application services.</p>
+                    <a href="makeup.html" class="nav-link">Learn More</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about">
+        <div class="container">
+            <div class="about-content">
+                <div class="about-image">
+                    <img src="beauteeee.jpeg" alt="Beauty professionals">
+                </div>
+                <div class="about-text">
+                    <h2>About Beauty Lounge</h2>
+                    <p>Founded in 2015, Beauty Lounge has been dedicated to providing exceptional beauty services in a
+                        luxurious and welcoming environment.</p>
+                    <p>Our team of certified professionals is passionate about beauty and committed to staying updated
+                        with the latest techniques and trends in the industry.</p>
+                    <p>We use only high-quality, premium products that are safe for you and the environment. Your
+                        satisfaction and well-being are our top priorities.</p>
+                    <a href="#contact" class="cta-button">Contact Us</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section id="testimonials" class="testimonials">
+        <div class="container">
+            <div class="section-title">
+                <h2>What Our Clients Say</h2>
+                <p>Don't just take our word for it - hear from our satisfied clients</p>
+            </div>
+            <div class="testimonial-grid">
+                <div class="testimonial-card">
+                    <div class="testimonial-text">
+                        "I've been coming to Beauty Lounge for over a year now, and I'm always impressed with the
+                        quality of service. The staff is professional, friendly, and skilled. Highly recommend!"
+                    </div>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">
+                            <img src="woman1.jpg" alt="Sarah Johnson">
+                        </div>
+                        <div class="author-info">
+                            <div class="author-name">Sarah Johnson</div>
+                            <div class="author-rating">
+                                <img src="star2.png" alt="star" class="star-img">
+                                <img src="star2.png" alt="star" class="star-img">
+                                <img src="star2.png" alt="star" class="star-img">
+                                <img src="star2.png" alt="star" class="star-img">
+                                <img src="star2.png" alt="star" class="star-img">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-text">
+                        "The facial treatment I received was absolutely amazing! My skin feels refreshed and looks
+                        radiant. The ambiance is so relaxing, and the staff truly cares about your needs."
+                    </div>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">
+                            <img src="woman2.jpg" alt="Emily Davis">
+                        </div>
+                        <div class="author-info">
+                            <div class="author-name">Emily Davis</div>
+                            <div class="author-rating">
+                                <img src="star2.png" alt="star" class="star-img">
+                                <img src="star2.png" alt="star" class="star-img">
+                                <img src="star2.png" alt="star" class="star-img">
+                                <img src="star2.png" alt="star" class="star-img">
+                                <img src="star2.png" alt="star" class="star-img">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-text">
+                        "Beauty Lounge is my go-to place for all my beauty needs. Their nail artists are creative and
+                        detail-oriented. I always leave feeling beautiful and confident!"
+                    </div>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">
+                            <img src="man1.webp" alt="Michael Torres">
+                        </div>
+                        <div class="author-info">
+                            <div class="author-name">Michael Torres</div>
+                            <div class="author-rating">
+                                <img src="star2.png" alt="star" class="star-img">
+                                <img src="star2.png" alt="star" class="star-img">
+                                <img src="star2.png" alt="star" class="star-img">
+                                <img src="star2.png" alt="star" class="star-img">
+                                <img src="star2.png" alt="star" class="star-img">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <div class="section-title">
+                <h2>Contact Us</h2>
+                <p>Get in touch with us to book an appointment or learn more about our services</p>
+            </div>
+            <div class="contact-content">
+                <div class="contact-info">
+                    <h3>Our Information</h3>
+                    <div class="contact-item">
+                        <div class="contact-icon">📍</div>
+                        <div>123 Beauty Street, City, State 12345</div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">📞</div>
+                        <div>(123) 456-7890</div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">✉️</div>
+                        <div>info@beautylounge.com</div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">🕒</div>
+                        <div>
+                            <div>Monday - Friday: 9am - 8pm</div>
+                            <div>Saturday: 10am - 6pm</div>
+                            <div>Sunday: Closed</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="contact-form">
+                    <form id="contactForm">
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="Your Name" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" class="form-control" placeholder="Your Email" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="tel" class="form-control" placeholder="Your Phone">
+                        </div>
+                        <div class="form-group">
+                            <select class="form-control" required>
+                                <option value="" disabled selected>Select Service</option>
+                                <option value="facial">Facial Treatment</option>
+                                <option value="nails">Nail Care</option>
+                                <option value="hair">Hair Styling</option>
+                                <option value="body">Body Treatment</option>
+                                <option value="lash">Lash & Brow</option>
+                                <option value="makeup">Makeup Service</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <textarea class="form-control" placeholder="Your Message"></textarea>
+                        </div>
+                        <button type="submit" class="submit-button">Send Message</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>Beauty Lounge</h3>
+                    <p>Your destination for premium beauty services in a luxurious and welcoming environment.</p>
+                    <div class="social-links">
+                        <a href="#" class="social-icon">📱</a>
+                        <a href="#" class="social-icon">📷</a>
+                        <a href="#" class="social-icon">📘</a>
+                        <a href="#" class="social-icon">🐦</a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="index">Home</a></li>
+                        <li><a href="index#services">Services</a></li>
+                        <li><a href="index#about">About Us</a></li>
+                        <li><a href="index#testimonials">Testimonials</a></li>
+                        <li><a href="index#contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Services</h3>
+                    <ul class="footer-links">
+                        <li><a href="facial.html">Facial Treatments</a></li>
+                        <li><a href="nails.html">Nail Care</a></li>
+                        <li><a href="hair.html">Hair Styling</a></li>
+                        <li><a href="body.html">Body Treatments</a></li>
+                        <li><a href="lash.html">Lash & Brow</a></li>
+                        <li><a href="makeup.html">Makeup Services</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Newsletter</h3>
+                    <p>Subscribe to our newsletter for the latest updates and offers.</p>
+                    <form>
+                        <div class="form-group">
+                            <input type="email" class="form-control" placeholder="Your Email" required>
+                        </div>
+                        <button type="submit" class="submit-button">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Beauty Lounge. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Login/Signup Modal -->
+    <div class="modal" id="authModal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+
+            <div class="auth-tabs">
+                <div class="auth-tab active" data-tab="login">Login</div>
+                <div class="auth-tab" data-tab="signup">Sign Up</div>
+            </div>
+
+            <!-- Login Form -->
+            <form class="auth-form active" id="loginForm">
+                <div class="form-group">
+                    <label for="loginEmail">Email</label>
+                    <input type="email" id="loginEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" required>
+                </div>
+                <button type="submit" class="auth-button">Login</button>
+                <div class="form-footer">
+                    <a href="#" id="forgotPassword">Forgot Password?</a>
+                </div>
+            </form>
+
+            <!-- Signup Form -->
+            <form class="auth-form" id="signupForm">
+                <div class="form-group">
+                    <label for="signupName">Full Name</label>
+                    <input type="text" id="signupName" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupEmail">Email</label>
+                    <input type="email" id="signupEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupPhone">Phone Number</label>
+                    <input type="tel" id="signupPhone" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupPassword">Password</label>
+                    <input type="password" id="signupPassword" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupConfirmPassword">Confirm Password</label>
+                    <input type="password" id="signupConfirmPassword" required>
+                </div>
+                <button type="submit" class="auth-button">Sign Up</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Modal functionality
+        const modal = document.getElementById('authModal');
+        const loginBtn = document.getElementById('loginBtn');
+        const closeBtn = document.querySelector('.close-modal');
+        const authTabs = document.querySelectorAll('.auth-tab');
+        const authForms = document.querySelectorAll('.auth-form');
+
+        // Open modal
+        loginBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            modal.classList.add('active');
+        });
+
+        // Close modal
+        closeBtn.addEventListener('click', () => {
+            modal.classList.remove('active');
+        });
+
+        // Close modal when clicking outside
+        window.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.classList.remove('active');
+            }
+        });
+
+        // Tab switching    
+        authTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                // Remove active class from all tabs and forms
+                authTabs.forEach(t => t.classList.remove('active'));
+                authForms.forEach(f => f.classList.remove('active'));
+
+                // Add active class to clicked tab and corresponding form
+                tab.classList.add('active');
+                document.querySelector(`.auth-form#${tab.dataset.tab}Form`).classList.add('active');
+            });
+        });
+
+        // Form submission
+        const loginForm = document.getElementById('loginForm');
+        const signupForm = document.getElementById('signupForm');
+
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            // Add your login logic here
+            console.log('Login submitted');
+        });
+
+        signupForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            // Add your signup logic here
+            console.log('Signup submitted');
+        });
+
+        // Intersection Observer setup
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, {
+            threshold: 0.1 // Trigger when at least 10% of the element is visible
+        });
+
+        // Observe all elements with slide-in class
+        document.querySelectorAll('.slide-in').forEach((element) => {
+            observer.observe(element);
+        });
+
+        // Trigger animations immediately if elements are already visible on page load
+        window.addEventListener('load', () => {
+            document.querySelectorAll('.slide-in').forEach((element) => {
+                if (element.getBoundingClientRect().top < window.innerHeight) {
+                    element.classList.add('active');
+                }
+            });
+        });
+
+        const contactForm = document.getElementById('contactForm');
+
+        contactForm.addEventListener('submit', function(e) {
+            e.preventDefault(); // Prevent form from submitting
+
+            // Get all form values
+            const formData = {
+                name: this.querySelector('input[placeholder="Your Name"]').value,
+                email: this.querySelector('input[placeholder="Your Email"]').value,
+                phone: this.querySelector('input[placeholder="Your Phone"]').value,
+                service: this.querySelector('select').value,
+                message: this.querySelector('textarea').value
+            };
+
+            // Log the data to console
+            console.log('Form Submission Data:', formData);
+
+            // Optional: Clear the form after submission
+            this.reset();
+
+            // Optional: Show success message
+            alert('Message sent successfully!');
+        });
+    </script>
+</body>
+
+</html>
