@@ -495,6 +495,120 @@
         .content-section.active {
             display: block;
         }
+
+        /* from db */
+        .controls {
+            margin-bottom: 20px;
+            padding: 20px;
+            background-color: #f5f5f5;
+            border-radius: 8px;
+        }
+
+        .input-group {
+            margin-bottom: 10px;
+        }
+
+        input {
+            padding: 8px;
+            margin-right: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        button {
+            padding: 8px 16px;
+            background-color: #0b294d;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+
+        .users-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .users-table th, .users-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .users-table th {
+            background-color: #f5f5f5;
+        }
+
+        .delete-btn {
+            background-color: #dc3545;
+        }
+
+        #status {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 4px;
+        }
+
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .loading {
+            display: none;
+            margin: 20px 0;
+            text-align: center;
+            color: #666;
+        }
+
+        .loading.active {
+            display: block;
+        }
+
+        .export-btn {
+            background-color: #28a745;
+        }
+
+        .clear-btn {
+            background-color: #ffc107;
+            color: #212529;
+        }
+
+        #setupDb {
+            display: none; /* Hide setup button by default */
+        }
+        
+        #setupDb.show {
+            display: inline-block;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 0;
+            color: #666;
+        }
+
+        .form-error {
+            color: #dc3545;
+            font-size: 0.85em;
+            margin-top: 5px;
+        }
     </style>
 </head>
 
@@ -549,7 +663,7 @@
                 <div class="admin-header-right">
                     <div class="admin-profile">
                         <div class="admin-avatar">
-                            <img src="/api/placeholder/40/40" alt="Admin">
+                            <img src="me.jpg" alt="Admin">
                         </div>
                         <div class="admin-name">Siyana Zapryanova</div>
                     </div>
@@ -560,6 +674,51 @@
             <div class="dashboard-content">
                 <!-- Dashboard Section -->
                 <div class="content-section active" id="dashboard-section">
+                    <h1>Database Operations Test</h1>
+
+                    <!-- Loading indicator -->
+                    <div id="loading" class="loading">Initializing database...</div>
+                
+                    <!-- Database Controls -->
+                    <div class="controls">
+                        <button id="setupDb">Reinitialize Database</button>
+                        <div class="input-group">
+                            <input type="text" id="name" placeholder="Name" disabled>
+                            <input type="email" id="email" placeholder="Email" disabled>
+                            <input type="text" id="role" placeholder="Role" disabled>
+                            <button id="addUser" disabled>Add User</button>
+                        </div>
+                        <div id="formErrors" class="form-error"></div>
+                        <div class="button-group">
+                            <button id="showUsers" disabled>Refresh Users</button>
+                            <button id="exportDb" class="export-btn" disabled>Export Database</button>
+                            <button id="clearDb" class="clear-btn" disabled>Clear Database</button>
+                        </div>
+                    </div>
+                
+                    <!-- Status Display -->
+                    <div id="status"></div>
+                
+                    <!-- Users Table -->
+                    <table class="users-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Role</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersTableBody">
+                            <!-- Users will be displayed here -->
+                        </tbody>
+                    </table>
+                    <div id="emptyState" class="empty-state" style="display: none;">
+                        No users found. Add a user to get started.
+                    </div>
+
+
                     <h2>Dashboard Overview</h2>
                     <p>Welcome back! Here's what's happening at your salon today.</p>
 
@@ -937,6 +1096,246 @@
             </div>
         </div>
     </div>
+
+        <!-- Add SQL.js WASM file -->
+    <script src="https://sql.js.org/dist/sql-wasm.js"></script>
+    
+    <!-- Database Operations -->
+    <script type="module">
+        import { 
+            setupDatabase, 
+            addUser, 
+            getAllUsers, 
+            deleteUser, 
+            formatUserData,
+            exportDatabase,
+            clearDatabase
+        } from './server.js';
+
+        let db = null;
+
+        // Show status message
+        function showStatus(message, isError = false) {
+            const statusDiv = document.getElementById('status');
+            statusDiv.textContent = message;
+            statusDiv.className = isError ? 'error' : 'success';
+            if (!isError) {
+                setTimeout(() => statusDiv.textContent = '', 3000);
+            }
+        }
+
+        // Show form error
+        function showFormError(message) {
+            const errorDiv = document.getElementById('formErrors');
+            errorDiv.textContent = message;
+            errorDiv.style.display = message ? 'block' : 'none';
+        }
+
+        // Display users in table
+        function displayUsers(users) {
+            const tbody = document.getElementById('usersTableBody');
+            const emptyState = document.getElementById('emptyState');
+            tbody.innerHTML = '';
+
+            if (!users || users.length === 0) {
+                emptyState.style.display = 'block';
+                return;
+            }
+
+            emptyState.style.display = 'none';
+            users.forEach(user => {
+                const userData = formatUserData(user);
+                console.log('userData', userData)
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${userData.id}</td>
+                    <td>${userData.name}</td>
+                    <td>${userData.email}</td>
+                    <td>${userData.role}</td>
+                    <td>
+                        <button class="delete-btn" data-id="${userData.id}">Delete</button>
+                    </td>
+                `;
+                row.querySelector('.delete-btn').addEventListener('click', () => deleteUserById(userData.id));
+                tbody.appendChild(row);
+            });
+        }
+
+        // Enable/disable form controls
+        function setControlsEnabled(enabled) {
+            document.getElementById('name').disabled = !enabled;
+            document.getElementById('email').disabled = !enabled;
+            document.getElementById('role').disabled = !enabled;
+            document.getElementById('addUser').disabled = !enabled;
+            document.getElementById('showUsers').disabled = !enabled;
+            document.getElementById('exportDb').disabled = !enabled;
+            document.getElementById('clearDb').disabled = !enabled;
+        }
+
+        // Show/hide loading indicator
+        function setLoading(show) {
+            document.getElementById('loading').className = show ? 'loading active' : 'loading';
+        }
+
+        // Validate form
+        function validateForm(name, email, role) {
+            if (!name.trim()) {
+                return 'Name is required';
+            }
+            
+            if (!email.trim()) {
+                return 'Email is required';
+            }
+            
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                return 'Please enter a valid email address';
+            }
+            
+            if (!role.trim()) {
+                return 'Role is required';
+            }
+            
+            return null; // No errors
+        }
+
+        // Initialize database
+        async function initializeDatabase() {
+            setLoading(true);
+            showFormError('');
+            try {
+                db = await setupDatabase();
+                showStatus('Database initialized successfully!');
+                setControlsEnabled(true);
+                refreshUsersList();
+                document.getElementById('setupDb').classList.remove('show');
+            } catch (error) {
+                console.error('Database initialization error:', error);
+                showStatus('Error initializing database: ' + error.message, true);
+                document.getElementById('setupDb').classList.add('show');
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        // Refresh users list
+        async function refreshUsersList() {
+            setLoading(true);
+            try {
+                const users = getAllUsers();
+                displayUsers(users);
+            } catch (error) {
+                console.error('Error loading users:', error);
+                showStatus('Error loading users: ' + error.message, true);
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        // Initialize event listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initial database setup
+            initializeDatabase();
+
+            // Setup Database (only shown if initial setup fails)
+            document.getElementById('setupDb').addEventListener('click', initializeDatabase);
+
+            // Add User
+            document.getElementById('addUser').addEventListener('click', async () => {
+                const name = document.getElementById('name').value;
+                const email = document.getElementById('email').value;
+                const role = document.getElementById('role').value;
+
+                // Validate form
+                const error = validateForm(name, email, role);
+                if (error) {
+                    showFormError(error);
+                    return;
+                }
+
+                showFormError('');
+                setLoading(true);
+                try {
+                    await addUser(name, email, role);
+                    showStatus('User added successfully!');
+                    refreshUsersList();
+                    // Clear inputs
+                    document.getElementById('name').value = '';
+                    document.getElementById('email').value = '';
+                    document.getElementById('role').value = '';
+                } catch (error) {
+                    console.error('Error adding user:', error);
+                    showStatus('Error adding user: ' + error.message, true);
+                    if (error.message.includes('Email already exists')) {
+                        showFormError('Email already exists');
+                    }
+                } finally {
+                    setLoading(false);
+                }
+            });
+
+            // Show Users
+            document.getElementById('showUsers').addEventListener('click', refreshUsersList);
+
+            // Export Database
+            document.getElementById('exportDb').addEventListener('click', () => {
+                try {
+                    const binaryArray = exportDatabase();
+                    const blob = new Blob([binaryArray], { type: 'application/x-sqlite3' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'database_backup.sqlite';
+                    a.click();
+                    URL.revokeObjectURL(url);
+                    showStatus('Database exported successfully!');
+                } catch (error) {
+                    console.error('Export error:', error);
+                    showStatus('Error exporting database: ' + error.message, true);
+                }
+            });
+
+            // Clear Database
+            document.getElementById('clearDb').addEventListener('click', async () => {
+                if (!confirm('Are you sure you want to clear the database? This will delete all data.')) {
+                    return;
+                }
+                
+                setLoading(true);
+                try {
+                    await clearDatabase();
+                    showStatus('Database cleared successfully!');
+                    document.getElementById('setupDb').classList.add('show');
+                    setControlsEnabled(false);
+                    displayUsers([]);
+                } catch (error) {
+                    console.error('Error clearing database:', error);
+                    showStatus('Error clearing database: ' + error.message, true);
+                } finally {
+                    setLoading(false);
+                }
+            });
+        });
+
+        // Delete user function
+        async function deleteUserById(id) {
+            if (!confirm('Are you sure you want to delete this user?')) {
+                return;
+            }
+            
+            setLoading(true);
+            try {
+                await deleteUser(id);
+                showStatus('User deleted successfully!');
+                refreshUsersList();
+            } catch (error) {
+                console.error('Error deleting user:', error);
+                showStatus('Error deleting user: ' + error.message, true);
+            } finally {
+                setLoading(false);
+            }
+        }
+    </script>
 
     <script>
         // Toggle sidebar

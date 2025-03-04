@@ -342,6 +342,7 @@
                     <label for="loginPassword">Password</label>
                     <input type="password" id="loginPassword" required>
                 </div>
+                <div class="form-error" id="loginError"></div>
                 <button type="submit" class="auth-button">Login</button>
                 <div class="form-footer">
                     <a href="#" id="forgotPassword">Forgot Password?</a>
@@ -364,28 +365,110 @@
                 </div>
                 <div class="form-group">
                     <label for="signupPassword">Password</label>
-                    <input type="password" id="signupPassword" required>
+                    <input type="password" id="signupPassword" required minlength="6">
                 </div>
                 <div class="form-group">
                     <label for="signupConfirmPassword">Confirm Password</label>
-                    <input type="password" id="signupConfirmPassword" required>
+                    <input type="password" id="signupConfirmPassword" required minlength="6">
                 </div>
+                <div class="form-error" id="signupError"></div>
                 <button type="submit" class="auth-button">Sign Up</button>
+            </form>
+
+            <!-- Forgot Password Form -->
+            <form class="auth-form" id="forgotPasswordForm" style="display: none;">
+                <h3>Reset Password</h3>
+                <div class="form-group">
+                    <label for="resetEmail">Email</label>
+                    <input type="email" id="resetEmail" required>
+                </div>
+                <div class="form-error" id="resetError"></div>
+                <button type="submit" class="auth-button">Send Reset Link</button>
+                <div class="form-footer">
+                    <a href="#" id="backToLogin">Back to Login</a>
+                </div>
+            </form>
+
+            <!-- Reset Password Form -->
+            <form class="auth-form" id="resetPasswordForm" style="display: none;">
+                <h3>Set New Password</h3>
+                <div class="form-group">
+                    <label for="newPassword">New Password</label>
+                    <input type="password" id="newPassword" required minlength="6">
+                </div>
+                <div class="form-group">
+                    <label for="confirmNewPassword">Confirm New Password</label>
+                    <input type="password" id="confirmNewPassword" required minlength="6">
+                </div>
+                <div class="form-error" id="newPasswordError"></div>
+                <button type="submit" class="auth-button">Reset Password</button>
             </form>
         </div>
     </div>
 
-    <script>
+    <script src="https://sql.js.org/dist/sql-wasm.js"></script>
+    <script type="module">
+        import { 
+            setupDatabase, 
+            registerUser,
+            loginUser,
+            generateResetToken,
+            resetPassword
+        } from './server.js';
+
+        let currentUser = null;
+        let resetToken = null;
+
+        // Initialize database
+        window.addEventListener('load', async () => {
+            try {
+                await setupDatabase();
+                console.log('Database initialized');
+            } catch (error) {
+                console.error('Error initializing database:', error);
+            }
+        });
+
         // Modal functionality
         const modal = document.getElementById('authModal');
         const loginBtn = document.getElementById('loginBtn');
         const closeBtn = document.querySelector('.close-modal');
         const authTabs = document.querySelectorAll('.auth-tab');
         const authForms = document.querySelectorAll('.auth-form');
+        const forgotPasswordLink = document.getElementById('forgotPassword');
+        const backToLoginLink = document.getElementById('backToLogin');
+
+        // Show error message
+        function showError(elementId, message) {
+            const errorElement = document.getElementById(elementId);
+            errorElement.textContent = message;
+            errorElement.style.display = message ? 'block' : 'none';
+        }
+
+        // Update UI based on authentication state
+        function updateAuthUI(user) {
+            currentUser = user;
+            const loginBtn = document.getElementById('loginBtn');
+            
+            if (user) {
+                loginBtn.textContent = 'Logout';
+                // Add user-specific UI updates here
+                console.log('Logged in as:', user.name);
+            } else {
+                loginBtn.textContent = 'Login';
+                // Reset UI to logged-out state
+            }
+        }
 
         // Open modal
         loginBtn.addEventListener('click', (e) => {
             e.preventDefault();
+            if (currentUser) {
+                // Handle logout
+                currentUser = null;
+                updateAuthUI(null);
+                return;
+            }
             modal.classList.add('active');
         });
 
@@ -404,32 +487,127 @@
         // Tab switching    
         authTabs.forEach(tab => {
             tab.addEventListener('click', () => {
-                // Remove active class from all tabs and forms
                 authTabs.forEach(t => t.classList.remove('active'));
                 authForms.forEach(f => f.classList.remove('active'));
-
-                // Add active class to clicked tab and corresponding form
                 tab.classList.add('active');
                 document.querySelector(`.auth-form#${tab.dataset.tab}Form`).classList.add('active');
+                // Hide forgot password form
+                document.getElementById('forgotPasswordForm').style.display = 'none';
+                document.getElementById('resetPasswordForm').style.display = 'none';
             });
         });
 
-        // Form submission
-        const loginForm = document.getElementById('loginForm');
-        const signupForm = document.getElementById('signupForm');
-
-        loginForm.addEventListener('submit', (e) => {
+        // Login form submission
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            // Add your login logic here
-            console.log('Login submitted');
+            showError('loginError', '');
+            
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            try {
+                const user = await loginUser(email, password);
+                updateAuthUI(user);
+                modal.classList.remove('active');
+                // Clear form
+                e.target.reset();
+            } catch (error) {
+                showError('loginError', error.message);
+            }
         });
 
-        signupForm.addEventListener('submit', (e) => {
+        // Signup form submission
+        document.getElementById('signupForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            // Add your signup logic here
-            console.log('Signup submitted');
+            showError('signupError', '');
+
+            const name = document.getElementById('signupName').value;
+            const email = document.getElementById('signupEmail').value;
+            const phone = document.getElementById('signupPhone').value;
+            const password = document.getElementById('signupPassword').value;
+            const confirmPassword = document.getElementById('signupConfirmPassword').value;
+
+            if (password !== confirmPassword) {
+                showError('signupError', 'Passwords do not match');
+                return;
+            }
+
+            try {
+                const user = await registerUser(name, email, password, phone);
+                updateAuthUI(user);
+                modal.classList.remove('active');
+                // Clear form
+                e.target.reset();
+            } catch (error) {
+                showError('signupError', error.message);
+            }
         });
 
+        // Show forgot password form
+        forgotPasswordLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            document.getElementById('loginForm').classList.remove('active');
+            document.getElementById('signupForm').classList.remove('active');
+            document.getElementById('forgotPasswordForm').style.display = 'block';
+            authTabs.forEach(tab => tab.classList.remove('active'));
+        });
+
+        // Back to login
+        backToLoginLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            document.getElementById('forgotPasswordForm').style.display = 'none';
+            document.getElementById('loginForm').classList.add('active');
+            authTabs[0].classList.add('active');
+        });
+
+        // Forgot password form submission
+        document.getElementById('forgotPasswordForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            showError('resetError', '');
+
+            const email = document.getElementById('resetEmail').value;
+
+            try {
+                resetToken = await generateResetToken(email);
+                // In a real application, you would send this token via email
+                console.log('Reset token:', resetToken);
+                
+                // Show reset password form
+                document.getElementById('forgotPasswordForm').style.display = 'none';
+                document.getElementById('resetPasswordForm').style.display = 'block';
+            } catch (error) {
+                showError('resetError', error.message);
+            }
+        });
+
+        // Reset password form submission
+        document.getElementById('resetPasswordForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            showError('newPasswordError', '');
+
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmNewPassword = document.getElementById('confirmNewPassword').value;
+
+            if (newPassword !== confirmNewPassword) {
+                showError('newPasswordError', 'Passwords do not match');
+                return;
+            }
+
+            try {
+                await resetPassword(resetToken, newPassword);
+                resetToken = null;
+                // Show login form
+                document.getElementById('resetPasswordForm').style.display = 'none';
+                document.getElementById('loginForm').classList.add('active');
+                authTabs[0].classList.add('active');
+                alert('Password reset successful! Please login with your new password.');
+            } catch (error) {
+                showError('newPasswordError', error.message);
+            }
+        });
+    </script>
+
+    <script>
         // Intersection Observer setup
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
